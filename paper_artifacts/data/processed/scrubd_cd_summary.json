@@ -1,0 +1,34 @@
+﻿{
+    "dataset_summary":  {
+                            "contracts_total":  469,
+                            "merged_from":  [
+                                                "results\\anew4",
+                                                "results\\anew4_direct9"
+                                            ],
+                            "output_dir":  "results\\anew4_merged",
+                            "predictions_jsonl":  "results\\anew4_merged\\predictions.jsonl",
+                            "predictions_csv":  "results\\anew4_merged\\predictions.csv",
+                            "report_dirs_copied":  true
+                        },
+    "source_summary":  {
+                           "anew4_records":  460,
+                           "anew4_direct9_records":  9,
+                           "merged_unique_addresses":  469
+                       },
+    "status_summary":  {
+                           "ok":  463,
+                           "timeout":  5,
+                           "analysis_failed":  1
+                       },
+    "finding_summary":  {
+                            "ok_records":  463,
+                            "positive_predictions":  184,
+                            "bounded_retry_ok_records":  0,
+                            "avg_ok_runtime_seconds":  13.601535710583166
+                        },
+    "merge_notes":  [
+                        "Records are keyed by lower-case address.",
+                        "If duplicate addresses exist, anew4_direct9 overrides anew4 because it is added second.",
+                        "Original result directories were not modified."
+                    ]
+}

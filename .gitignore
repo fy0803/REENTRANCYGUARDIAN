@@ -19,6 +19,7 @@ Thumbs.db
 # Temporary and generated files
 .tmp_*/
 .tmp_*
+tmp/
 *.log
 .pytest_cache/
 .mypy_cache/

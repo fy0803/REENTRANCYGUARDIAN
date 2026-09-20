@@ -1,0 +1,5 @@
+method_variant,n,tp,fp,tn,fn,precision,recall,f1,source_status,support_note
+Full,746,127,57,462,100,0.6902,0.5595,0.6180,derived_output,matched by retained run matrix
+Base ICFG (no semantic edges),746,71,46,473,156,0.6068,0.3128,0.4128,final_manuscript_aggregate,detailed final run matrix not retained
+No State Access,746,14,10,509,213,0.5833,0.0617,0.1116,final_manuscript_aggregate,detailed final run matrix not retained
+No Constraint Filtering,746,132,152,367,95,0.4648,0.5815,0.5166,derived_output,retained run key no_state_conflict

@@ -1,0 +1,4 @@
+method_variant,n,tp,fp,tn,fn,precision,recall,f1,source_status
+Full,136,60,12,46,18,0.8333,0.7692,0.8000,derived_output
+No State-Inconsistency Interval,136,0,0,58,78,0.0000,0.0000,0.0000,final_manuscript_aggregate
+No Read-Only Result Propagation,136,49,12,46,29,0.8033,0.6282,0.7050,final_manuscript_aggregate

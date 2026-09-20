@@ -1,0 +1,3 @@
+scope,n,TP,FP,TN,FN,accuracy,precision,recall,f1
+cleaned_dataset_completed_only,136,60,12,46,18,0.7794,0.8333,0.7692,0.8
+cleaned_dataset_missing_as_negative,136,60,12,46,18,0.7794,0.8333,0.7692,0.8

@@ -1,0 +1,46 @@
+{
+  "dataset_summary": {
+    "dataset_dir": "datasets\\All_contract_DB1",
+    "total_solidity_files": 877,
+    "unique_source_hashes": 195,
+    "reference_label_counts": {
+      "False": 607,
+      "True": 83,
+      "unlabeled": 187
+    },
+    "completed_records_in_output": 877,
+    "completed_unique_hashes_in_output": 195,
+    "remaining_after_this_run": 0,
+    "output_dir": "results\\all_contract_db1_reentrancy"
+  },
+  "batch_summary": {
+    "selected_count": 0,
+    "first_sample_id": null,
+    "last_sample_id": null,
+    "batch_size": 25,
+    "workers": 1,
+    "dry_run": false,
+    "skip_run": false
+  },
+  "status_summary": {
+    "compile_failed": 80,
+    "ok": 496,
+    "timeout": 301
+  },
+  "prediction_summary": {
+    "ok_samples": 496,
+    "detected_positive_samples": 72,
+    "detected_negative_samples": 424,
+    "positive_rate_on_ok_samples": 0.14516129032258066,
+    "avg_ok_runtime_seconds": 8.167981582671693
+  },
+  "run_config": {
+    "mode": "full",
+    "analysis_timeout": 120,
+    "process_timeout": 240,
+    "classic_fallback_policy": "strict_v6",
+    "precision_filter": true,
+    "python_exe": "D:\\code\\icfg\\venv\\Scripts\\python.exe",
+    "reference_csv": "D:\\code\\SliSE-main\\Experimental_data\\RQ1\\stage1&2_detection_DB1.csv"
+  }
+}

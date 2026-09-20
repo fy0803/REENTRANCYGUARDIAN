@@ -1,0 +1,6 @@
+tool,n,tp,fp,tn,fn,precision,recall,f1,source_status,note
+RG,895,55,12,802,26,0.8209,0.6790,0.7432,final_manuscript_aggregate,final 895-record aggregate
+Slither,895,8,140,674,73,0.0541,0.0988,0.0699,upstream_baseline,TN derived from 814 negative records minus 140 FP
+Mythril,895,5,22,792,76,0.1852,0.0617,0.0926,upstream_baseline,published reference result
+Sailfish,895,0,2,812,81,0.0000,0.0000,0.0000,upstream_baseline,published reference result
+SliSE,895,70,27,787,11,0.7216,0.8642,0.7865,upstream_baseline,published reference result

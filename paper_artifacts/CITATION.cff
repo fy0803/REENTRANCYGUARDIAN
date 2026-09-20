@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use these artifacts, please cite the associated manuscript and this repository."
+type: dataset
+title: "Datasets and Evaluation Artifacts for REENTRANCY GUARDIAN"
+version: 1.0.0
+date-released: 2026-09-20
+authors:
+  - family-names: Wang
+    given-names: Fuyang
+  - family-names: Duan
+    given-names: Ning
+  - family-names: Dou
+    given-names: Junyu
+  - family-names: Du
+    given-names: Gang
+repository-code: "https://github.com/fy0803/REENTRANCYGUARDIAN"
+url: "https://github.com/fy0803/REENTRANCYGUARDIAN/tree/main/paper_artifacts"
+keywords:
+  - smart contracts
+  - static analysis
+  - cross-contract reentrancy
+  - read-only reentrancy
+  - reproducibility

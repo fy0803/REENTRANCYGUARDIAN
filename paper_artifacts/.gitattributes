@@ -1,0 +1,2 @@
+# Keep research artifacts byte-stable across platforms for SHA-256 verification.
+* text eol=lf
