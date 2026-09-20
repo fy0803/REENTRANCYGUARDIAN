@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\caption{Function-level comparison with existing reentrancy detection tools.}
+\label{tab:function-level-comparison}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Metric} & \textbf{Our Method} & \textbf{Slither} & \textbf{Mythril} & \textbf{Sailfish} & \textbf{SliSE} \\
+\midrule
+Dataset & Function-level (746) & Function-level (746) & Function-level (746) & Function-level (746) & Function-level (746) \\
+\# TP & 157 & 225 & 66 & 18 & 34 \\
+\# FP & 94 & 328 & 75 & 8 & 70 \\
+\# FN & 70 & 2 & 99 & 134 & 193 \\
+\# TN & 425 & 191 & 315 & 350 & 449 \\
+Precision & 0.625 & 0.407 & 0.468 & 0.692 & 0.327 \\
+Recall & 0.692 & 0.991 & 0.400 & 0.118 & 0.150 \\
+F1-score & 0.657 & 0.577 & 0.431 & 0.202 & 0.205 \\
+\bottomrule
+\end{tabular}
+\end{table}

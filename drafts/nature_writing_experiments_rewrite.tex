@@ -1,0 +1,103 @@
+% nature-writing / experiments draft
+% One-sentence argument:
+% 本章证明 ReentrancyGuardian 在带标签基准上具有可解释的复杂重入检测能力，
+% 同时通过 DAppSCAN-source 与 DB1 区分真实 DApp 正例验证、大规模覆盖实验和审计真值不足的边界。
+
+% Terminology ledger:
+% ReentrancyGuardian: 本文实现的语义增强静态分析工具
+% SE-ICFG: 语义增强型跨合约过程间控制流图
+% CCR: 跨合约/经典重入检测分支
+% ROR: 只读重入检测分支
+% analyzable samples: 能够成功完成前端解析与检测流程的样本
+% coverage failure: 由编译失败或超时造成的未覆盖样本，不等同于语义漏报
+
+\subsection{实验设置}
+
+为验证本文方法在复杂重入检测任务中的有效性，实验从四个层次展开。首先，本文在具有明确函数级正负标注的数据集上评价整体检测能力，以精确率、召回率和 F1 值衡量方法在标准基准上的有效性。其次，本文在只读重入数据集上评价方法对状态失配窗口、只读查询节点和敏感业务汇点的定位能力。再次，本文使用 DAppSCAN-source 中的 SWC-107 样本评价工具在真实 DApp 审计漏洞正例上的检测能力。最后，本文使用 DB1 合约集合评价工具在大规模复杂合约上的覆盖能力和报警解释能力。
+
+表~\ref{tab:dataset-roles} 给出了各数据集在本文实验中的具体角色。需要说明的是，不同数据集的标注粒度和证据来源并不相同，因此本文没有将所有数据集混合到同一个混淆矩阵中。SCRUBD-CD、SmartBugs 和只读重入数据集具有较明确的正负样本划分，适合用于计算 TP、FP、TN 和 FN。DAppSCAN-source SWC-107 是由审计报告和 SWC 标注抽取出的真实漏洞正例集合，适合评价正例召回率，但不适合直接计算 FP 和 TN。DB1 本地版本包含大量真实 DApp 合约源码，但缺少可机器匹配的审计报告级真值位置，因此本文仅将其用于规模化检测和报警解释实验，不基于 DB1 计算误报率。
+
+\begin{table}[htbp]
+\centering
+\caption{实验数据集及其评价用途}
+\label{tab:dataset-roles}
+\begin{tabular}{llll}
+\toprule
+数据集 & 样本性质 & 实验用途 & 评价方式 \\
+\midrule
+SCRUBD-CD & 函数级正负标注 & 主检测效果评价 & TP/FP/TN/FN \\
+SmartBugs & 经典漏洞样本 & 经典重入补充评价 & TP/FP/TN/FN \\
+只读重入数据集 & ROR 正负样本 & 只读重入定位评价 & TP/FP/TN/FN \\
+DAppSCAN-source SWC-107 & 真实 DApp 正例 & 真实漏洞正例验证 & TP/FN/Recall \\
+DB1 / All\_contract\_DB1 & 大规模真实合约 & 覆盖率与解释性分析 & 报警数、失败数、案例分析 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+所有实验均在相同的源码级静态分析框架下进行。工具首先调用 Slither 完成 Solidity 源码解析和中间表示抽取，随后构建 SE-ICFG，并在此基础上执行跨合约重入检测分支和只读重入检测分支。对于无法完成前端解析、依赖解析或规定时间内无法结束分析的样本，本文分别记录为编译失败或超时，并将其作为覆盖失败单独报告。除非特别说明，编译失败和超时不计入可分析样本上的语义漏报。
+
+\subsection{在真实 DApp 中的检测效果}
+
+为评价本文方法在真实 DApp 漏洞样本上的适用性，本文使用 InPlusLab/DAppSCAN 中的 DAppSCAN-source 数据集构造 SWC-107 正例验证集。DAppSCAN-source 提供真实 DApp 项目源码及对应的 SWC 漏洞报告，但其源码快照并不保证依赖完整或可直接编译。因此，本文从 SWC\_source 报告中抽取所有 SWC-107-Reentrancy 条目，并将其映射到 Solidity 源文件，得到 138 条 SWC-107 标注记录，覆盖 114 个唯一 Solidity 文件。
+
+表~\ref{tab:dappscan-result} 给出了 DAppSCAN-source SWC-107 上的检测结果。在 114 个真实 DApp 正例文件中，工具成功完成 37 个样本的分析，并检出其中 25 个样本，漏报 12 个样本。因此，在可分析样本上的召回率为 67.57\%。另外，20 个样本由于分析过程超时未能完成，57 个样本由于前端编译或 Slither 解析失败未能进入后续检测流程。若将所有失败样本也视为端到端未覆盖样本，则工具在完整 114 个正例文件上的检出覆盖率为 21.93\%。
+
+\begin{table}[htbp]
+\centering
+\caption{DAppSCAN-source SWC-107 正例验证结果}
+\label{tab:dappscan-result}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+数据集 & 标注记录 & 唯一文件 & 可分析 & TP & FN & Recall & Timeout & Compile failed \\
+\midrule
+DAppSCAN-source SWC-107 & 138 & 114 & 37 & 25 & 12 & 67.57\% & 20 & 57 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+失败样本分析表明，DAppSCAN-source 上的覆盖限制主要来自真实项目源码快照的不完整性。57 个编译失败样本中，36 个由缺失依赖或 import 无法解析导致，14 个由 solc 版本不匹配导致，5 个属于其他 solc 编译错误，1 个由 Slither IR 生成失败导致，另有 1 个未能明确归类。典型错误包括 \texttt{Source "..."} \texttt{not found}、\texttt{Source file requires different compiler version} 以及 \texttt{Failed to generate IR}。因此，本文将这些样本作为覆盖失败报告，而不将其混入可分析样本上的语义漏报统计。
+
+进一步地，本文在 DB1 的 All\_contract 合约集合上评价工具在大规模真实合约中的覆盖能力。该集合包含 877 个 Solidity 文件，其中由于源码重复，实际唯一源码哈希为 195 个。实验结果如表~\ref{tab:db1-scale-result} 所示，工具成功分析 496 个文件，产生 72 个阳性报警，另有 301 个样本超时、80 个样本编译失败。由于本地 DB1 数据未提供可机器匹配的审计报告级真值，本文不基于该集合计算误报率，而仅报告报警规模、完成情况和代表性报警解释。
+
+\begin{table}[htbp]
+\centering
+\caption{DB1 大规模真实合约检测结果}
+\label{tab:db1-scale-result}
+\begin{tabular}{lrrrrrr}
+\toprule
+数据集 & 文件数 & 唯一源码哈希 & 成功分析 & 阳性报警 & Timeout & Compile failed \\
+\midrule
+All\_contract\_DB1 & 877 & 195 & 496 & 72 & 301 & 80 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+从报警解释角度看，ReentrancyGuardian 的报告位置主要对应源码中的外部调用点、状态访问节点和证据路径节点。例如，在 DB1 样本 \texttt{Bank\_1.sol} 中，工具定位到 \texttt{Goblin(goblin).work.value(sendETH)(...)} 所在的外部调用行；在 \texttt{bVault\_1.sol} 中，工具定位到 \texttt{Controller(controller).withdraw(...)} 所在的外部调用行；在 \texttt{controller-v3\_1.sol} 中，工具定位到 \texttt{IStrategy(\_current).withdrawAll()} 调用点。这些位置能够解释工具为何产生报警，但由于缺少审计报告级位置标注，本文不将其等同于审计报告中的漏洞真值位置。
+
+\subsection{消融实验}
+
+为分析路径约束过滤和精度过滤机制对检测结果的影响，本文在同一评估子集上比较了关闭精度过滤与完整方法两种配置。该消融实验用于回答：本文方法的误报控制是否主要来自语义过滤机制，而不是简单降低报警数量。表~\ref{tab:precision-filter-ablation} 给出了实验结果。
+
+\begin{table}[htbp]
+\centering
+\caption{精度过滤机制消融实验}
+\label{tab:precision-filter-ablation}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+配置 & 样本数 & TP & FP & TN & FN & Precision & Recall & F1 \\
+\midrule
+关闭精度过滤 & 204 & 45 & 57 & 101 & 1 & 44.12\% & 97.83\% & 60.81\% \\
+完整方法 & 204 & 45 & 6 & 152 & 1 & 88.24\% & 97.83\% & 92.78\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+可以看到，关闭精度过滤后，方法仍然能够保持较高召回率，但误报数量从 6 增加到 57，精确率由 88.24\% 降至 44.12\%，F1 值由 92.78\% 降至 60.81\%。相比之下，完整方法在 TP 和 FN 不变的情况下显著减少误报，说明精度过滤并非通过牺牲召回率获得更高精确率，而是有效剔除了缺少可触发路径、状态冲突证据不足或受保护路径上的弱候选报警。该结果支持本文设计中的核心假设：复杂重入检测不能仅依赖外部调用结构和图可达性，还需要结合状态冲突、路径约束和保护机制对候选路径进行语义筛选。
+
+除精度过滤外，本文方法还包含 SE-ICFG 语义增强边、跨合约重入检测分支和只读重入检测分支等组成部分。由于当前实验结果尚未对这些模块分别给出完整 remove/replace 式消融，本文在最终版本中应进一步补充以下配置：移除回调边、移除只读依赖边、关闭 ROR 分支、关闭经典/跨合约重入分支，以及关闭 bounded path filtering。每一项消融均应在同一数据集、同一超时设置和同一评价脚本下重新运行，以避免将数据差异误解释为模块贡献。
+
+\subsection{效率分析}
+
+效率实验主要关注工具在不同真实规模数据上的完成情况和平均运行时间。在 SCRUBD-CD 全量合约实验中，工具共处理 469 个合约，其中 455 个样本成功完成分析，4 个样本超时，1 个样本分析失败；成功样本的平均分析时间为 12.44 秒。在 DAppSCAN-source SWC-107 实验中，37 个可分析样本的平均运行时间为 12.31 秒。在 DB1 大规模合约实验中，496 个成功分析样本的平均运行时间为 8.17 秒。
+
+这些结果表明，本文方法在成功完成前端解析的样本上具有可接受的分析开销。其主要时间成本来自 Slither 前端解析、SE-ICFG 构建和候选路径验证。与此同时，DAppSCAN-source 和 DB1 上较高比例的编译失败与超时说明，真实 DApp 代码的依赖完整性、编译器版本一致性和路径规模仍然是影响端到端覆盖率的重要因素。因此，本文将运行效率与覆盖失败分开报告：前者反映工具在可分析样本上的工程成本，后者反映真实源码数据集在依赖、编译和规模方面对静态分析工具提出的额外挑战。

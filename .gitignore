@@ -1,0 +1,29 @@
+# Python environments and caches
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Editors and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Temporary and generated files
+.tmp_*/
+.tmp_*
+*.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Large local datasets and generated experiment results
+datasets/
+results/
